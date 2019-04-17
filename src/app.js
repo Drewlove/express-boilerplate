@@ -15,9 +15,8 @@ app.use(morgan(morganOption))
 app.use(cors())
 app.use(helmet())
 
-app.get('/test', (req, res)=> {
-    const {test} = req.query
-    res.json(test)
+app.get('/', (req, res)=> {
+    res.json('working!)
 })
 
 app.use(function errorHandler(error, req, res, next){
