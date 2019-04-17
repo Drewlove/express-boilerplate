@@ -16,7 +16,7 @@ app.use(cors())
 app.use(helmet())
 
 app.get('/', (req, res)=> {
-    res.json('working!)
+    res.json('working!')
 })
 
 app.use(function errorHandler(error, req, res, next){
