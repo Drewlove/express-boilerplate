@@ -1,15 +1,15 @@
 const express = require('express')
 const uuid = require('uuid/v4')
 const logger = require('../logger')
-const bookmarks = require('../bookmarks')
+const store = require('../store')
 
-const bookmarksRouter = express.Router()
+const router = express.Router()
 const bodyParser = express.json()
 
-bookmarksRouter
+router
 .route('/bookmarks')
 .get((req, res)=> {
-    res.json(bookmarks)
+    res.json(store)
 })
 .post(bodyParser, (req, res)=> {
     const {title, url, description, rating} = req.body
@@ -21,19 +21,19 @@ bookmarksRouter
         .send('Invalid data')
     }
     const bookmark = {title, url, description, rating, id}
-    bookmarks.push(bookmark); 
+    store.push(bookmark); 
     logger.info(`Bookmark with ${id} was created`)
     res
     .status(201)
     .location(`http://localhost:8000/bookmarks/${id}`)
-    .json(bookmark)
+    .json(store)
 })
 
-bookmarksRouter
+router
 .route('/bookmarks/:id')
 .get((req, res) => {
     const {id} = req.params
-    const bookmark = bookmarks.find(bookmark => bookmark.id == id); 
+    const bookmark = store.find(bookmark => bookmark.id == id); 
     if(!bookmark){
         logger.error(`bookmark with ${id} not found`)
         return res
@@ -44,16 +44,16 @@ bookmarksRouter
 })
 .delete((req, res)=> {
     const {id} = req.params; 
-    const bookmarkIndex = bookmarks.findIndex(bookmark => bookmark.id == id); 
+    const bookmarkIndex = store.findIndex(bookmark => bookmark.id == id); 
     if(bookmarkIndex === -1){
         logger.error(`Failed attempt to delete, bookmark with id ${id} not found`)
         return res
         .status(404)
         .send({error: 'invalid entry'})
     }
-    const bookmarksList = bookmarks.filter(bookmark => bookmark.id !== id);
+    const updatedStore = store.filter(bookmark => bookmark.id !== id);
 
-    res.json(bookmarksList)
+    res.json(updatedStore)
 })
 
 
@@ -63,4 +63,4 @@ bookmarksRouter
 
 
 
-module.exports = bookmarksRouter
+module.exports = router
