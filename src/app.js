@@ -19,7 +19,7 @@ app.use(helmet())
 app.use(router)
 
 app.get('/', (req, res)=> {
-    res.json('working!')
+    res.json('Hello World!')
 })
 
 const logger = winston.createLogger({
